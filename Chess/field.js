@@ -46,7 +46,7 @@ function tableCreate(){
               td.className = 'cell-nav-corner';                                   // Стилизуем пустые углы по размеру и границам
             }
             if (col%2 == 0 && i != 9 && j != 9 && i != 0 && j != 0) {
-              td.className = 'black';                                              // Красим в церный в шахматном порядке
+              td.classList.add('black');                                              // Красим в церный в шахматном порядке
             }
             col++;                                                               // Счетчик для шахматного порядка цвета клеток
         }
@@ -81,8 +81,6 @@ function initial(start){
               if (i == 8 && j == 4 ) { var str = String.fromCharCode(9813) }
               if (i == 8 && j == 5 ) { var str = String.fromCharCode(9812) }
 
-                                         // Стилизуем с окантовкой чтобы было видно на любом фоне
-            td[j].classList.add('figure');
             td[j].innerHTML = str;
 
            }
@@ -101,17 +99,30 @@ function initial(start){
 // Функция добавляет кнопки меню
 //==============================================================================
 function addmenu() {
-    var element = document.createElement("input");
-    element.setAttribute("type", "button");
-    element.setAttribute("value", "Начальная расстановка");
-    element.setAttribute("name", "button1");
-    element.setAttribute("onclick", "initial(1)");
+    var element = document.createElement('input');
+    element.setAttribute('type', 'button');
+    element.setAttribute('value', 'Начальная расстановка');
+    element.setAttribute('name', 'button1');
+    element.setAttribute('onclick', 'initial(1)');
     document.body.appendChild(element);
-    var element = document.createElement("input");
-    element.setAttribute("type", "button");
-    element.setAttribute("value", "Очистить доску");
-    element.setAttribute("name", "button2");
-    element.setAttribute("onclick", "initial(0)");
+    var element = document.createElement('input');
+    element.setAttribute('type', 'button');
+    element.setAttribute('value', 'Очистить доску');
+    element.setAttribute('name', 'button2');
+    element.setAttribute('onclick', 'initial(0)');
+    document.body.appendChild(element);
+}
+//==============================================================================
+//==============================================================================
+// Функция добавляет тесктовое поле
+//==============================================================================
+function addtext(text) {
+    var element = document.createElement('input');
+    element.setAttribute('type', 'textarea');
+    element.setAttribute('value', text);
+    element.setAttribute('name', 'Status');
+    element.setAttribute('size', '100');
+    element.setAttribute('height', '100');
     document.body.appendChild(element);
 }
 
@@ -158,9 +169,14 @@ function tooltip() {
 function select () {
 
   var table = document.getElementsByTagName('table');
-  window.addEventListener("load", function(){
-      table[0].addEventListener("click", function(e){
-          //e.target.innerHTML  = "";
+  window.addEventListener('load', function(){
+      table[0].addEventListener('click', function(e){
+          //e.target.innerHTML  = '';
+          let target = event.target;
+         // если у нас есть подсказка...
+          let tooltipHtml = target.title;
+          if (!tooltipHtml) return;
+          var textarea = document.getElementsByTagName('input');
                 for(var i = 0; i < 10; i++){
                   var tr = table[0].getElementsByTagName('tr');                            // Получаем строки
                     for(var j = 0; j < 10; j++){
@@ -169,8 +185,55 @@ function select () {
                     }
                 }
           e.target.classList.add('click');
+          textarea[2].value = e.target.textContent + ' ' + figure(e.target.textContent);
       });
   });
 
 }
 //==============================================================================
+
+//==============================================================================
+// Функция пишет что за фигура по Char-коду символа
+//==============================================================================
+function figure (charcode) {
+  if (charcode == String.fromCharCode(9820)) {
+    return 'Черная ладья';
+  }
+  if (charcode == String.fromCharCode(9822)) {
+    return 'Черный конь';
+  }
+  if (charcode == String.fromCharCode(9821)) {
+    return 'Черный слон';
+  }
+  if (charcode == String.fromCharCode(9819)) {
+    return 'Черный ферзь';
+  }
+  if (charcode == String.fromCharCode(9818)) {
+    return 'Черный король';
+  }
+  if (charcode == String.fromCharCode(9823)) {
+    return 'Черная пешка';
+  }
+  if (charcode == String.fromCharCode(9817)) {
+    return 'Белая пешка';
+  }
+  if (charcode == String.fromCharCode(9814)) {
+    return 'Белая ладья';
+  }
+  if (charcode == String.fromCharCode(9816)) {
+    return 'Белый конь';
+  }
+  if (charcode == String.fromCharCode(9815)) {
+    return 'Белый слон';
+  }
+  if (charcode == String.fromCharCode(9813)) {
+    return 'Белый ферзь';
+  }
+  if (charcode == String.fromCharCode(9812)) {
+    return 'Белый король';
+  }
+  if (charcode == undefined || charcode == '') {
+    return 'Нет фигуры - поле пока свободно';
+  }
+}
+  //==============================================================================

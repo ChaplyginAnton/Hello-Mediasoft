@@ -10,6 +10,9 @@
     width: 40px;
     height: 40px;
     border: 1px solid black;
+    font-size: 187%;
+    font-weight: bold;
+    text-shadow: whitesmoke 1px 1px 0, whitesmoke -1px -1px 0, whitesmoke -1px 1px 0, whitesmoke 1px -1px 0;
 }
 .cell-nav-down {
     border: 1px black;
@@ -32,11 +35,6 @@
 }
 .black {
     background-color: black;
-}
-.figure {
-  font-size: 187%;
-  font-weight: bold;
-  text-shadow: whitesmoke 1px 1px 0, whitesmoke -1px -1px 0, whitesmoke -1px 1px 0, whitesmoke 1px -1px 0;
 }
 .tooltip {
   position: fixed;
