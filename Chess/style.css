@@ -48,5 +48,22 @@
   box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
 }
 .click {
+  text-shadow: yellow 1px 1px 0, yellow -1px -1px 0, yellow -1px 1px 0, yellow 1px -1px 0;
+}
+.legal {
   background-color: green;
+}
+#textarea {
+  -moz-appearance: textfield-multiline;
+  -webkit-appearance: textarea;
+  position: fixed;
+  border: 1px solid gray;
+  font: medium -moz-fixed;
+  font: -webkit-small-control;
+  height: 150px;
+  overflow: auto;
+  padding: 2px;
+  resize: both;
+  width: 350px;
+  box-shadow: inset 0px 1px 4px #666;
 }

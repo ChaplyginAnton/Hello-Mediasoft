@@ -57,59 +57,28 @@ function tableCreate(){
 //==============================================================================
 
 //==============================================================================
-// Функция очищает доску от всех фигур и опционально расставляет начальную расстановку (если start == 1)
-//==============================================================================
-function initial(start){
-  var bod = document.body,
-      table  = document.getElementsByTagName('table');                            // Получаем таблицу
-
-      for(var i = 0; i < 10; i++){
-        var tr = table[0].getElementsByTagName('tr');                            // Получаем строки
-          for(var j = 0; j < 10; j++){
-            var td = tr[i].getElementsByTagName('td');                           // Получаем ячейки
-            if ((i == 1 || i == 2 || i == 7 || i == 8) && j != 0 && j != 9 && start) {                  // Вставляем фигуры - следующий этап:
-              if (i == 1 && (j == 1 || j == 8)) { var str = String.fromCharCode(9820) }
-              if (i == 1 && (j == 2 || j == 7)) { var str = String.fromCharCode(9822) }
-              if (i == 1 && (j == 3 || j == 6)) { var str = String.fromCharCode(9821) }
-              if (i == 1 && j == 4 ) { var str = String.fromCharCode(9819) }
-              if (i == 1 && j == 5 ) { var str = String.fromCharCode(9818) }
-              if (i == 2) { var str = String.fromCharCode(9823) }
-              if (i == 7) { var str = String.fromCharCode(9817) }
-              if (i == 8 && (j == 1 || j == 8)) { var str = String.fromCharCode(9814) }
-              if (i == 8 && (j == 2 || j == 7)) { var str = String.fromCharCode(9816) }
-              if (i == 8 && (j == 3 || j == 6)) { var str = String.fromCharCode(9815) }
-              if (i == 8 && j == 4 ) { var str = String.fromCharCode(9813) }
-              if (i == 8 && j == 5 ) { var str = String.fromCharCode(9812) }
-
-            td[j].innerHTML = str;
-
-           }
-           if (i > 2 && i < 7 && j != 0 && j != 9 && start) {                    // Очищаем доску от фигур кроме стартовых
-             td[j].innerHTML = '';
-           }
-           if (start == 0 && i != 9 && j != 9 && i != 0 && j != 0) {               // Очищаем доску от всех фигур
-             td[j].innerHTML = '';
-           }
-        }
-     }
-}
-//==============================================================================
-
-//==============================================================================
 // Функция добавляет кнопки меню
 //==============================================================================
 function addmenu() {
     var element = document.createElement('input');
     element.setAttribute('type', 'button');
-    element.setAttribute('value', 'Начальная расстановка');
+    element.setAttribute('value', 'Новая игра');
     element.setAttribute('name', 'button1');
-    element.setAttribute('onclick', 'initial(1)');
+    element.setAttribute('onclick', 'NewGame()');
     document.body.appendChild(element);
+/*
     var element = document.createElement('input');
     element.setAttribute('type', 'button');
     element.setAttribute('value', 'Очистить доску');
     element.setAttribute('name', 'button2');
     element.setAttribute('onclick', 'initial(0)');
+    document.body.appendChild(element);
+    */
+    var element = document.createElement('input');
+    element.setAttribute('type', 'textarea');
+    element.setAttribute('value', 'Здесь будут события');
+    element.setAttribute('size', '100');
+    element.setAttribute('name', 'Status');
     document.body.appendChild(element);
 }
 //==============================================================================
@@ -117,19 +86,68 @@ function addmenu() {
 // Функция добавляет тесктовое поле
 //==============================================================================
 function addtext(text) {
-    var element = document.createElement('input');
-    element.setAttribute('type', 'textarea');
+  /*  var element = document.createElement('textarea');
     element.setAttribute('value', text);
+    element.setAttribute('position', 'fixed');
     element.setAttribute('name', 'Status');
-    element.setAttribute('size', '100');
-    element.setAttribute('height', '100');
+    element.setAttribute('cols', '50');
+    element.setAttribute('rows', '5');
     document.body.appendChild(element);
+    element.style.left = '450px';
+    element.style.top = '3000px';
+*/
+    var element = document.createElement('div');
+    element.setAttribute('id', 'textarea');
+    element.setAttribute('contenteditable', 'true');
+    document.body.appendChild(element);
+    element.style.left = '450px';
+    element.style.top = '100px';
 }
 
 //==============================================================================
 
 //==============================================================================
-// Функция рисует всплывающие подсказки
+// Функция рисует подсказки с очередностью хода
+//==============================================================================
+function WhoIs(side) {
+  if (side) {
+     side_color = 'Белых';
+     var left = 400;
+     var top = 440;
+  }
+  if (!side) {
+     side_color = 'Черных';
+     var left = 400;
+     var top = 30;
+  }
+
+  var tooltipElem = document.getElementsByTagName('div');
+  if (tooltipElem[1]) {
+    tooltipElem[1].remove();
+    tooltipElem[1] = null;
+  }
+  tooltipElem = document.createElement('div');
+  tooltipElem.className = 'tooltip';
+  tooltipElem.innerHTML = 'Ход ' + side_color;
+  document.body.append(tooltipElem);
+  tooltipElem.style.left = left + 'px';
+  tooltipElem.style.top = top + 'px';
+}
+
+//==============================================================================
+// Функция убирает все классы именем clas у коллекции объектов
+//==============================================================================
+
+function unselect(object,clas) {
+  for (var i = 0; i < object.length; i++) {
+    object[i].classList.remove(clas);
+    i--;
+  }
+}
+//==============================================================================
+
+//==============================================================================
+// Функция рисует всплывающие подсказки (пока не используется)
 //==============================================================================
 function tooltip() {
   let tooltipElem;
@@ -162,78 +180,3 @@ function tooltip() {
       };
 }
 //==============================================================================
-
-//==============================================================================
-// Функция выделяет ячейку по клику - пока сырая((
-//==============================================================================
-function select () {
-
-  var table = document.getElementsByTagName('table');
-  window.addEventListener('load', function(){
-      table[0].addEventListener('click', function(e){
-          //e.target.innerHTML  = '';
-          let target = event.target;
-         // если у нас есть подсказка...
-          let tooltipHtml = target.title;
-          if (!tooltipHtml) return;
-          var textarea = document.getElementsByTagName('input');
-                for(var i = 0; i < 10; i++){
-                  var tr = table[0].getElementsByTagName('tr');                            // Получаем строки
-                    for(var j = 0; j < 10; j++){
-                      var td = tr[i].getElementsByTagName('td');                           // Получаем ячейки
-                        td[j].classList.remove('click');
-                    }
-                }
-          e.target.classList.add('click');
-          textarea[2].value = e.target.textContent + ' ' + figure(e.target.textContent);
-      });
-  });
-
-}
-//==============================================================================
-
-//==============================================================================
-// Функция пишет что за фигура по Char-коду символа
-//==============================================================================
-function figure (charcode) {
-  if (charcode == String.fromCharCode(9820)) {
-    return 'Черная ладья';
-  }
-  if (charcode == String.fromCharCode(9822)) {
-    return 'Черный конь';
-  }
-  if (charcode == String.fromCharCode(9821)) {
-    return 'Черный слон';
-  }
-  if (charcode == String.fromCharCode(9819)) {
-    return 'Черный ферзь';
-  }
-  if (charcode == String.fromCharCode(9818)) {
-    return 'Черный король';
-  }
-  if (charcode == String.fromCharCode(9823)) {
-    return 'Черная пешка';
-  }
-  if (charcode == String.fromCharCode(9817)) {
-    return 'Белая пешка';
-  }
-  if (charcode == String.fromCharCode(9814)) {
-    return 'Белая ладья';
-  }
-  if (charcode == String.fromCharCode(9816)) {
-    return 'Белый конь';
-  }
-  if (charcode == String.fromCharCode(9815)) {
-    return 'Белый слон';
-  }
-  if (charcode == String.fromCharCode(9813)) {
-    return 'Белый ферзь';
-  }
-  if (charcode == String.fromCharCode(9812)) {
-    return 'Белый король';
-  }
-  if (charcode == undefined || charcode == '') {
-    return 'Нет фигуры - поле пока свободно';
-  }
-}
-  //==============================================================================
